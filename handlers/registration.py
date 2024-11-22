@@ -3,7 +3,7 @@ from aiogram.types import Message, CallbackQuery
 
 from aiogram.fsm.context import FSMContext
 
-from keyboards.reply import cancel_kb
+from keyboards.reply import main_kb, cancel_kb
 from keyboards.inline import course_select_kb, confirmation_kb
 
 from bot_states import Registration
@@ -33,7 +33,13 @@ async def process_course(callback: CallbackQuery, state: FSMContext):
 async def process_photo(message: Message, state: FSMContext):
     await state.update_data(photo=message.photo[-1].file_id)
     await state.set_state(Registration.confirmation)
-    await message.answer("все верно?", reply_markup=confirmation_kb)
+    data = await state.get_data()
+    await message.delete()
+    await message.answer_photo( photo=data['photo'], caption=f"""
+                           имя фамилия: {data['name']}
+                           курс: {data['course']}
+
+                           """, reply_markup=confirmation_kb)
 
 @router.callback_query(Registration.confirmation)
 async def process_confirmation(callback: CallbackQuery, state: FSMContext, bot: Bot):
@@ -43,12 +49,11 @@ async def process_confirmation(callback: CallbackQuery, state: FSMContext, bot: 
 
         photo_info = await bot.get_file(data['photo'])
         await bot.download_file(photo_info.file_path, f"photos/{data['name'].split()[0]}.jpg")
-        await callback.message.answer(f"имя: {data['name']}\n"
-                                    f"курс: {data['course']}\n"
-                                    f"фото: {data['photo']}")
+        await callback.message.answer("вы успешно зарегистрировались", reply_markup=main_kb)
         await state.clear()
+        await callback.message.delete()
     else:
-        await callback.message.answer("вы отменили регистрацию")
+        await callback.message.answer("вы отменили регистрацию", reply_markup=main_kb)
         await state.clear()
 
 
