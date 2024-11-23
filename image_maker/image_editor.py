@@ -9,7 +9,7 @@ class ImageEditor:
         self.output_path = output_path
 
 
-    def create_rounded_image(self, image_path: str, size: tuple[int, int]):
+    def create_rounded_image(self, image_path: str, size: tuple[int, int] = (150, 150)):
         def prepare_mask(size, antialias = 2):
             mask = Image.new('L', (size[0] * antialias, size[1] * antialias), 0)
             ImageDraw.Draw(mask).ellipse((0, 0) + mask.size, fill=255)
@@ -32,17 +32,17 @@ class ImageEditor:
 
     def put_photo_in_template(self, image: Image, photo_position: tuple[int, int]):
         im = Image.open(self.template_path)
-        im.paste(image, (20, 50))
+        im.paste(image, (20, 50), mask=image)
 
         return im
 
 
-    def draw_text_on_image(self, image: Image, text: str, text_position: tuple[int, int]):
+    def draw_text_on_image(self, image: Image, text: str, text_position: tuple[int, int], final_name: str):
         draw = ImageDraw.Draw(image)
         draw.text(text_position, text, (0, 0, 0))
-        image.save(self.output_path)
+        image.save(f"{self.output_path}/{final_name}.png")
 
-    def do_all(self, image_path: Image, photo_position: tuple[int, int], text: str, text_position: tuple[int, int]):
+    def create_final_image(self, image_path: str, photo_position: tuple[int, int], text: str, text_position: tuple[int, int], final_name: str):
         rounded_image = self.create_rounded_image(image_path)
         template_with_photo = self.put_photo_in_template(rounded_image, photo_position)
-        self.draw_text_on_image(template_with_photo, text, text_position)
+        self.draw_text_on_image(template_with_photo, text, text_position, final_name)
