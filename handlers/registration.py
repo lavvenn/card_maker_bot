@@ -53,11 +53,11 @@ async def process_confirmation(callback: CallbackQuery, state: FSMContext, bot: 
         data = await state.get_data()
 
         photo_info = await bot.get_file(data['photo'])
-        await bot.download_file(photo_info.file_path, f"photos/{data['name'].split()[0]}.jpg")
-        convert_to_png(f"photos/{data['name'].split()[0]}.jpg")
+        await bot.download_file(photo_info.file_path, f"photos/{data['name'].split()[0]}_{data['name'].split()[1]}.jpg")
+        convert_to_png(f"photos/{data['name'].split()[0]}_{data['name'].split()[1]}.jpg")
         await callback.message.answer("вы успешно зарегистрировались", reply_markup=main_kb)
 
-        image_editor.create_final_image(f"photos/{data['name'].split()[0]}.png", (100, 100), data['name'], (300, 100), data['name'].split()[0])
+        image_editor.create_final_image(f"photos/{data['name'].split()[0]}_{data['name'].split()[1]}.png", (100, 100), data['name'], (300, 100), f"{data['name'].split()[0]}_{data['name'].split()[1]}")
 
         await state.clear()
         await callback.message.delete()
