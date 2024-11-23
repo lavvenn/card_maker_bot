@@ -57,7 +57,7 @@ async def process_confirmation(callback: CallbackQuery, state: FSMContext, bot: 
         convert_to_png(f"photos/{data['name'].split()[0]}.jpg")
         await callback.message.answer("вы успешно зарегистрировались", reply_markup=main_kb)
 
-        image_editor.create_final_image(f"photos/{data['name'].split()[0]}.png", (100, 100), data['name'], (500, 100), data['name'].split()[0])
+        image_editor.create_final_image(f"photos/{data['name'].split()[0]}.png", (100, 100), data['name'], (300, 100), data['name'].split()[0])
 
         await state.clear()
         await callback.message.delete()

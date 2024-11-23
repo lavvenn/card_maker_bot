@@ -11,3 +11,9 @@ confirmation_kb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text = "✅", callback_data="yes")],
     [InlineKeyboardButton(text = "❌", callback_data="no")]
 ])
+
+
+admin_panel_kb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text = "📝 посмотреть карточки 📝", callback_data="check_cards")],
+    [InlineKeyboardButton(text = "📈получить статистику📉", callback_data="check_stats")]
+])
